@@ -83,6 +83,31 @@ class List<T> {
 
     return this;
   }
+
+  /**
+   * pop
+   */
+  public pop(): T {
+    if (!this.#size) {
+      throw new Error("List is empty");
+    }
+
+    if (this.#size === 1) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const value = this.#last!.value;
+      this.#items = undefined;
+      this.#size = 0;
+      this.#last = undefined;
+
+      return value;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const value = this.#last!.value;
+    this.#size = this.#size - 1;
+    this.#last = undefined;
+    return value;
+  }
 }
 
 export { Item, List };
