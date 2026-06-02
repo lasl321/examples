@@ -1,0 +1,48 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "description": "A collection of example implementations",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm-run-all build:tsc prettier:check lint test:coverage proof",
+    "build:tsc": "tsc",
+    "lint": "npm-run-all lint:eslint",
+    "lint:eslint": "eslint",
+    "lint:eslint:report": "eslint --format html -o .eslint/index.html",
+    "test": "vitest --run",
+    "test:coverage": "vitest --run --coverage",
+    "prettier:check": "prettier --check --ignore-unknown --no-editorconfig .",
+    "prettier:write": "prettier --write --ignore-unknown --no-editorconfig .",
+    "prepare": "husky && effect-language-service patch",
+    "proof": "git rev-parse HEAD | npx cowsay"
+  },
+  "keywords": [],
+  "author": "Luis Sotomayor luis@gleneseo.com",
+  "license": "UNLICENSED",
+  "type": "module",
+  "devDependencies": {
+    "@effect/language-service": "^0.86.2",
+    "@eslint/js": "^10.0.1",
+    "@tsconfig/node-ts": "^23.6.4",
+    "@tsconfig/node24": "^24.0.4",
+    "@tsconfig/strictest": "^2.0.8",
+    "@types/node": "^24.12.4",
+    "@vitest/coverage-v8": "^4.1.7",
+    "cowsay": "^1.6.0",
+    "eslint": "^10.4.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.5",
+    "npm-run-all": "^4.1.5",
+    "prettier": "3.8.3",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.60.0",
+    "vitest": "^4.1.7"
+  },
+  "dependencies": {
+    "@effect/cli": "^0.75.1",
+    "@effect/experimental": "^0.60.0",
+    "@effect/platform-node": "^0.106.0",
+    "effect": "^3.21.2"
+  },
+  "lint-staged": {}
+}
