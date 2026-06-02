@@ -28,4 +28,28 @@ describe("linked-list", () => {
     expect(actual.items?.next?.value).toBe(2000);
     expect(actual.items?.next?.next).toBeUndefined();
   });
+
+  it("should convert empty list to iterable", () => {
+    const input: number[] = [];
+
+    const actual = Array.from(new List(input));
+
+    expect(actual).toEqual([]);
+  });
+
+  it("should convert one item list to iterable", () => {
+    const input: number[] = [1000];
+
+    const actual = Array.from(new List(input));
+
+    expect(actual).toEqual([1000]);
+  });
+
+  it("should convert two item list to iterable", () => {
+    const input: number[] = [1000, 2000];
+
+    const actual = Array.from(new List(input));
+
+    expect(actual).toEqual([1000, 2000]);
+  });
 });

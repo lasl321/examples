@@ -55,6 +55,14 @@ class List<T> {
   public get size(): number {
     return this.#size;
   }
+
+  *[Symbol.iterator]() {
+    let item: Item<T> | undefined = this.#items;
+    while (item) {
+      yield item.value;
+      item = item.next;
+    }
+  }
 }
 
 export { Item, List };
