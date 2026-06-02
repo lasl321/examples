@@ -1,10 +1,12 @@
 class Item<T> {
   #value: T;
   #next: Item<T> | undefined;
+  #previous: Item<T> | undefined;
 
   constructor(value: T, next?: Item<T>) {
     this.#value = value;
     this.#next = next;
+    this.#previous = next;
   }
 
   public get value(): T {
@@ -17,6 +19,14 @@ class Item<T> {
 
   public set next(item: Item<T> | undefined) {
     this.#next = item;
+  }
+
+  public get previous(): Item<T> | undefined {
+    return this.#previous;
+  }
+
+  public set previous(item: Item<T> | undefined) {
+    this.#previous = item;
   }
 }
 
@@ -46,7 +56,13 @@ class List<T> {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       value = items[index]!;
 
-      current = new Item(value, current);
+      const newItem: Item<T> = new Item<T>(value, current);
+      current.previous = newItem;
+      current = newItem;
+
+      if (!this.#last.previous) {
+        this.#last.previous = current;
+      }
       this.#size = this.#size + 1;
 
       index = index - 1;
@@ -84,9 +100,6 @@ class List<T> {
     return this;
   }
 
-  /**
-   * pop
-   */
   public pop(): T {
     if (!this.#size) {
       throw new Error("List is empty");
@@ -105,7 +118,7 @@ class List<T> {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const value = this.#last!.value;
     this.#size = this.#size - 1;
-    this.#last = undefined;
+    this.#last = this.#last?.previous ? this.#last.previous : undefined;
     return value;
   }
 }
