@@ -14,14 +14,20 @@ class Item<T> {
   public get next(): Item<T> | undefined {
     return this.#next;
   }
+
+  public set next(item: Item<T> | undefined) {
+    this.#next = item;
+  }
 }
 
 class List<T> {
   #items: Item<T> | undefined;
   #size: number;
+  #last: Item<T> | undefined;
 
   constructor(items: readonly T[]) {
     this.#size = 0;
+    this.#last = undefined;
 
     if (!items.length) {
       return;
@@ -31,7 +37,8 @@ class List<T> {
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     let value: T = items[index]!;
-    let last: Item<T> | undefined = new Item(value);
+    let current: Item<T> | undefined = new Item(value);
+    this.#last = current;
     this.#size = this.#size + 1;
 
     index = index - 1;
@@ -39,13 +46,13 @@ class List<T> {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       value = items[index]!;
 
-      last = new Item(value, last);
+      current = new Item(value, current);
       this.#size = this.#size + 1;
 
       index = index - 1;
     }
 
-    this.#items = last;
+    this.#items = current;
   }
 
   public get items(): Item<T> | undefined {
@@ -62,6 +69,19 @@ class List<T> {
       yield item.value;
       item = item.next;
     }
+  }
+
+  public append(value: T): this {
+    const newLast = new Item(value);
+    if (this.#last) {
+      this.#last.next = newLast;
+    } else {
+      this.#items = newLast;
+    }
+    this.#last = newLast;
+    this.#size = this.#size + 1;
+
+    return this;
   }
 }
 

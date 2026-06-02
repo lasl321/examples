@@ -52,4 +52,12 @@ describe("linked-list", () => {
 
     expect(actual).toEqual([1000, 2000]);
   });
+
+  it("should add append item", () => {
+    const actual = new List<number>([]);
+    actual.append(1000);
+
+    expect(actual.size).toBe(1);
+    expect(actual.items?.value).toBe(1000);
+  });
 });
