@@ -29,36 +29,52 @@ describe("linked-list", () => {
     expect(actual.items?.next?.next).toBeUndefined();
   });
 
-  it("should convert empty list to iterable", () => {
-    const input: number[] = [];
+  describe("iterator", () => {
+    it("should convert empty list to iterable", () => {
+      const input: number[] = [];
 
-    const actual = Array.from(new List(input));
+      const actual = Array.from(new List(input));
 
-    expect(actual).toEqual([]);
+      expect(actual).toEqual([]);
+    });
+
+    it("should convert one item list to iterable", () => {
+      const input: number[] = [1000];
+
+      const actual = Array.from(new List(input));
+
+      expect(actual).toEqual([1000]);
+    });
+
+    it("should convert two item list to iterable", () => {
+      const input: number[] = [1000, 2000];
+
+      const actual = Array.from(new List(input));
+
+      expect(actual).toEqual([1000, 2000]);
+    });
   });
 
-  it("should convert one item list to iterable", () => {
-    const input: number[] = [1000];
+  describe("append", () => {
+    it("should append item into empty list", () => {
+      const list = new List<number>([]);
+      const actual = list.append(1000);
 
-    const actual = Array.from(new List(input));
+      expect(actual).toBe(list);
+      expect(list.size).toBe(1);
+      expect(list.first).toBe(1000);
+      expect(list.last).toBe(1000);
+    });
 
-    expect(actual).toEqual([1000]);
-  });
+    it("should append item into list", () => {
+      const list = new List<number>([1000]);
+      const actual = list.append(2000);
 
-  it("should convert two item list to iterable", () => {
-    const input: number[] = [1000, 2000];
-
-    const actual = Array.from(new List(input));
-
-    expect(actual).toEqual([1000, 2000]);
-  });
-
-  it("should add append item", () => {
-    const actual = new List<number>([]);
-    actual.append(1000);
-
-    expect(actual.size).toBe(1);
-    expect(actual.items?.value).toBe(1000);
+      expect(actual).toBe(list);
+      expect(list.size).toBe(2);
+      expect(list.first).toBe(1000);
+      expect(list.last).toBe(2000);
+    });
   });
 
   describe("pop", () => {
