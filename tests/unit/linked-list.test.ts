@@ -61,57 +61,59 @@ describe("linked-list", () => {
     expect(actual.items?.value).toBe(1000);
   });
 
-  it("should allow pop on empty list", () => {
-    const list = new List<number>([]);
-    const actual = list.pop();
+  describe("pop", () => {
+    it("should allow pop on empty list", () => {
+      const list = new List<number>([]);
+      const actual = list.pop();
 
-    expect(actual).toBeUndefined();
-    expect(list.size).toBe(0);
-    expect(list.first).toBeUndefined();
-    expect(list.last).toBeUndefined();
-  });
+      expect(actual).toBeUndefined();
+      expect(list.size).toBe(0);
+      expect(list.first).toBeUndefined();
+      expect(list.last).toBeUndefined();
+    });
 
-  it("should pop last item when resulting list is empty", () => {
-    const list = new List<number>([1000]);
-    const actual = list.pop();
+    it("should pop last item when resulting list is empty", () => {
+      const list = new List<number>([1000]);
+      const actual = list.pop();
 
-    expect(actual).toBe(1000);
-    expect(list.size).toBe(0);
-    expect(list.first).toBeUndefined();
-    expect(list.last).toBeUndefined();
-  });
+      expect(actual).toBe(1000);
+      expect(list.size).toBe(0);
+      expect(list.first).toBeUndefined();
+      expect(list.last).toBeUndefined();
+    });
 
-  it("should pop last item when resulting list has one item", () => {
-    const list = new List<number>([1000, 2000]);
-    const actual = list.pop();
+    it("should pop last item when resulting list has one item", () => {
+      const list = new List<number>([1000, 2000]);
+      const actual = list.pop();
 
-    expect(actual).toBe(2000);
-    expect(list.size).toBe(1);
-    expect(list.first).toBe(1000);
-    expect(list.last).toBe(1000);
-  });
+      expect(actual).toBe(2000);
+      expect(list.size).toBe(1);
+      expect(list.first).toBe(1000);
+      expect(list.last).toBe(1000);
+    });
 
-  it("should pop last item when resulting list has two items", () => {
-    const list = new List<number>([1000, 2000, 3000]);
-    const actual = list.pop();
+    it("should pop last item when resulting list has two items", () => {
+      const list = new List<number>([1000, 2000, 3000]);
+      const actual = list.pop();
 
-    expect(actual).toBe(3000);
-    expect(list.size).toBe(2);
-    expect(list.first).toBe(1000);
-    expect(list.last).toBe(2000);
-  });
+      expect(actual).toBe(3000);
+      expect(list.size).toBe(2);
+      expect(list.first).toBe(1000);
+      expect(list.last).toBe(2000);
+    });
 
-  // TODO handle multiple pop executions by moving last pointer; need doubly-linked list
-  it("should allow multiple pop executions", () => {
-    const list = new List<number>([1000, 2000, 3000]);
+    // TODO handle multiple pop executions by moving last pointer; need doubly-linked list
+    it("should allow multiple pop executions", () => {
+      const list = new List<number>([1000, 2000, 3000]);
 
-    const actual1 = list.pop();
-    const actual2 = list.pop();
+      const actual1 = list.pop();
+      const actual2 = list.pop();
 
-    expect(actual1).toBe(3000);
-    expect(actual2).toBe(2000);
-    expect(list.size).toBe(1);
-    expect(list.first).toBe(1000);
-    expect(list.last).toBe(1000);
+      expect(actual1).toBe(3000);
+      expect(actual2).toBe(2000);
+      expect(list.size).toBe(1);
+      expect(list.first).toBe(1000);
+      expect(list.last).toBe(1000);
+    });
   });
 });
