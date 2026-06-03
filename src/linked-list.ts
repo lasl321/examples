@@ -1,10 +1,12 @@
 class Item<T> {
   #value: T;
   #next: Item<T> | undefined;
+  #previous: Item<T> | undefined;
 
-  constructor(value: T, next?: Item<T>) {
+  constructor(value: T, next?: Item<T>, previous?: Item<T>) {
     this.#value = value;
     this.#next = next;
+    this.#previous = previous;
   }
 
   public get value(): T {
@@ -18,6 +20,14 @@ class Item<T> {
   public set next(item: Item<T> | undefined) {
     this.#next = item;
   }
+
+  public get previous(): Item<T> | undefined {
+    return this.#previous;
+  }
+
+  public set previous(item: Item<T> | undefined) {
+    this.#previous = item;
+  }
 }
 
 class List<T> {
@@ -26,6 +36,7 @@ class List<T> {
   #last: Item<T> | undefined;
 
   constructor(items: readonly T[]) {
+    this.#items = undefined;
     this.#size = 0;
     this.#last = undefined;
 
@@ -34,25 +45,27 @@ class List<T> {
     }
 
     let index = items.length - 1;
-
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     let value: T = items[index]!;
-    let current: Item<T> | undefined = new Item(value);
-    this.#last = current;
-    this.#size = this.#size + 1;
+    let recent: Item<T> | undefined = new Item(value);
+    this.#last = recent;
+    this.#size = 1;
 
     index = index - 1;
     while (index >= 0) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       value = items[index]!;
 
-      current = new Item(value, current);
+      const newItem: Item<T> = new Item<T>(value, recent);
+      recent.previous = newItem;
+      recent = newItem;
+
       this.#size = this.#size + 1;
 
       index = index - 1;
     }
 
-    this.#items = current;
+    this.#items = recent;
   }
 
   public get items(): Item<T> | undefined {
@@ -71,42 +84,104 @@ class List<T> {
     }
   }
 
+  /**
+   * Add a new value to the list
+   *
+   * @param value a value
+   * @returns the current instance
+   */
   public append(value: T): this {
     const newLast = new Item(value);
-    if (this.#last) {
-      this.#last.next = newLast;
+    const previousLast = this.#last;
+
+    if (previousLast) {
+      previousLast.next = newLast;
+      newLast.previous = previousLast;
+
+      this.#last = newLast;
+      this.#size = this.#size + 1;
     } else {
       this.#items = newLast;
+      this.#size = 1;
+      this.#last = newLast;
     }
-    this.#last = newLast;
-    this.#size = this.#size + 1;
 
     return this;
   }
 
   /**
-   * pop
+   * Remove the last item in the list and return it
+   *
+   * @remarks
+   * Returns `undefined` if the list is empty
    */
-  public pop(): T {
-    if (!this.#size) {
-      throw new Error("List is empty");
+  public pop(): T | undefined {
+    const previousLast = this.#last;
+    if (!previousLast) {
+      return undefined;
     }
 
-    if (this.#size === 1) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const value = this.#last!.value;
-      this.#items = undefined;
+    const value = previousLast.value;
+    const newLast = previousLast.previous;
+    if (newLast) {
+      previousLast.previous = undefined;
+      newLast.next = undefined;
+
+      this.#size = this.#size - 1;
+      this.#last = newLast;
+    } else {
       this.#size = 0;
       this.#last = undefined;
-
-      return value;
+      this.#items = undefined;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const value = this.#last!.value;
-    this.#size = this.#size - 1;
-    this.#last = undefined;
     return value;
+  }
+
+  /**
+   * Return the first value in the list
+   *
+   * @remark
+   * Returns `undefined` if the list is empty
+   */
+  public get first(): T | undefined {
+    return this.#items?.value;
+  }
+
+  /**
+   * Return the last value in the list
+   *
+   * @remark
+   * Returns `undefined` if the list is empty
+   */
+  public get last(): T | undefined {
+    return this.#last?.value;
+  }
+
+  /**
+   * Checks for value equality
+   *
+   * @param other another list
+   * @returns `true` if the lists are value equal
+   */
+  public equals(other: List<T>): boolean {
+    if (this.#size !== other.#size) {
+      return false;
+    }
+
+    let lhs = this.#last;
+    let rhs = other.#last;
+
+    while (lhs !== undefined && rhs !== undefined) {
+      if (lhs.value !== rhs.value) {
+        return false;
+      }
+
+      lhs = lhs.previous;
+      rhs = rhs.previous;
+    }
+
+    return true;
   }
 }
 

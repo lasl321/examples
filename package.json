@@ -11,6 +11,7 @@
     "lint:eslint:report": "eslint --format html -o .eslint/index.html",
     "test": "vitest --run",
     "test:coverage": "vitest --run --coverage",
+    "test:watch": "vitest",
     "prettier:check": "prettier --check --ignore-unknown --no-editorconfig .",
     "prettier:write": "prettier --write --ignore-unknown --no-editorconfig .",
     "prepare": "husky && effect-language-service patch",
