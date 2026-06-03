@@ -3,10 +3,10 @@ class Item<T> {
   #next: Item<T> | undefined;
   #previous: Item<T> | undefined;
 
-  constructor(value: T, next?: Item<T>) {
+  constructor(value: T, next?: Item<T>, previous?: Item<T>) {
     this.#value = value;
     this.#next = next;
-    this.#previous = next;
+    this.#previous = previous;
   }
 
   public get value(): T {
@@ -36,6 +36,7 @@ class List<T> {
   #last: Item<T> | undefined;
 
   constructor(items: readonly T[]) {
+    this.#items = undefined;
     this.#size = 0;
     this.#last = undefined;
 
@@ -44,31 +45,27 @@ class List<T> {
     }
 
     let index = items.length - 1;
-
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     let value: T = items[index]!;
-    let current: Item<T> | undefined = new Item(value);
-    this.#last = current;
-    this.#size = this.#size + 1;
+    let recent: Item<T> | undefined = new Item(value);
+    this.#last = recent;
+    this.#size = 1;
 
     index = index - 1;
     while (index >= 0) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       value = items[index]!;
 
-      const newItem: Item<T> = new Item<T>(value, current);
-      current.previous = newItem;
-      current = newItem;
+      const newItem: Item<T> = new Item<T>(value, recent);
+      recent.previous = newItem;
+      recent = newItem;
 
-      if (!this.#last.previous) {
-        this.#last.previous = current;
-      }
       this.#size = this.#size + 1;
 
       index = index - 1;
     }
 
-    this.#items = current;
+    this.#items = recent;
   }
 
   public get items(): Item<T> | undefined {
@@ -87,39 +84,78 @@ class List<T> {
     }
   }
 
+  /**
+   * Add a new value to the list
+   *
+   * @param value a value
+   * @returns the current instance
+   */
   public append(value: T): this {
     const newLast = new Item(value);
-    if (this.#last) {
-      this.#last.next = newLast;
+    const previousLast = this.#last;
+
+    if (previousLast) {
+      previousLast.next = newLast;
+      newLast.previous = previousLast;
+
+      this.#last = newLast;
+      this.#size = this.#size + 1;
     } else {
       this.#items = newLast;
+      this.#size = 1;
+      this.#last = newLast;
     }
-    this.#last = newLast;
-    this.#size = this.#size + 1;
 
     return this;
   }
 
-  public pop(): T {
-    if (!this.#size) {
-      throw new Error("List is empty");
+  /**
+   * Remove the last item in the list and return it
+   *
+   * @remarks
+   * Returns `undefined` if the list is empty
+   */
+  public pop(): T | undefined {
+    const previousLast = this.#last;
+    if (!previousLast) {
+      return undefined;
     }
 
-    if (this.#size === 1) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const value = this.#last!.value;
-      this.#items = undefined;
+    const value = previousLast.value;
+    const newLast = previousLast.previous;
+    if (newLast) {
+      previousLast.previous = undefined;
+      newLast.next = undefined;
+
+      this.#size = this.#size - 1;
+      this.#last = newLast;
+    } else {
       this.#size = 0;
       this.#last = undefined;
-
-      return value;
+      this.#items = undefined;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const value = this.#last!.value;
-    this.#size = this.#size - 1;
-    this.#last = this.#last?.previous ? this.#last.previous : undefined;
     return value;
+  }
+
+  /**
+   * Return the first value in the list
+   *
+   * @remark
+   * Returns `undefined` if the list is empty
+   */
+  public get first(): T | undefined {
+    return this.#items?.value;
+  }
+
+  /**
+   * Return the last value in the list
+   *
+   * @remark
+   * Returns `undefined` if the list is empty
+   */
+  public get last(): T | undefined {
+    return this.#last?.value;
   }
 }
 
