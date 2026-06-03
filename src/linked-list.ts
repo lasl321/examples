@@ -157,6 +157,32 @@ class List<T> {
   public get last(): T | undefined {
     return this.#last?.value;
   }
+
+  /**
+   * Checks for value equality
+   *
+   * @param other another list
+   * @returns `true` if the lists are value equal
+   */
+  public equals(other: List<T>): boolean {
+    if (this.#size !== other.#size) {
+      return false;
+    }
+
+    let lhs = this.#last;
+    let rhs = other.#last;
+
+    while (lhs !== undefined && rhs !== undefined) {
+      if (lhs.value !== rhs.value) {
+        return false;
+      }
+
+      lhs = lhs.previous;
+      rhs = rhs.previous;
+    }
+
+    return true;
+  }
 }
 
 export { Item, List };

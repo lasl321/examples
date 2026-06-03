@@ -137,4 +137,42 @@ describe("linked-list", () => {
       expect(list.last).toBe(1000);
     });
   });
+
+  describe("equals", () => {
+    it("should handle empty lists", () => {
+      const list1 = new List([]);
+      const list2 = new List([]);
+
+      expect(list1.equals(list2)).toBeTruthy();
+    });
+
+    it("should detect one list is empty", () => {
+      const empty: number[] = [];
+      const list1 = new List(empty);
+      const list2 = new List([1000]);
+
+      expect(list1.equals(list2)).toBeFalsy();
+    });
+
+    it("should handle lists of the same size", () => {
+      const list1 = new List([1000, 2000]);
+      const list2 = new List([1000, 2000]);
+
+      expect(list1.equals(list2)).toBeTruthy();
+    });
+
+    it("should detect lists of different sizes", () => {
+      const list1 = new List([1000, 2000, 3000]);
+      const list2 = new List([1000, 2000]);
+
+      expect(list1.equals(list2)).toBeFalsy();
+    });
+
+    it("should detect lists with different contents", () => {
+      const list1 = new List([1000, 2000, 3000]);
+      const list2 = new List([1000, 2000, 4000]);
+
+      expect(list1.equals(list2)).toBeFalsy();
+    });
+  });
 });
