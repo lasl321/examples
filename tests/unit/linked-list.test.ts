@@ -2,31 +2,36 @@ import { it, expect, describe } from "vitest";
 import { List } from "../../src/linked-list.ts";
 
 describe("linked-list", () => {
-  it("should handle empty list", () => {
-    const input: number[] = [];
-    const actual = new List(input);
+  describe("constructor", () => {
+    it("should handle empty list", () => {
+      const actual = new List([]);
 
-    expect(actual.size).toBe(0);
-    expect(actual.items).toBeUndefined();
-  });
+      expect(actual.size).toBe(0);
+      expect(actual.items).toBeUndefined();
+      expect(actual.first).toBeUndefined();
+      expect(actual.last).toBeUndefined();
+    });
 
-  it("should handle one-item list", () => {
-    const input: number[] = [1000];
-    const actual = new List(input);
+    it("should handle one-item list", () => {
+      const actual = new List([1000]);
 
-    expect(actual.size).toBe(1);
-    expect(actual.items?.value).toBe(1000);
-    expect(actual.items?.next).toBeUndefined();
-  });
+      expect(actual.size).toBe(1);
+      expect(actual.items?.value).toBe(1000);
+      expect(actual.items?.next).toBeUndefined();
+      expect(actual.first).toBe(1000);
+      expect(actual.last).toBe(1000);
+    });
 
-  it("should handle two-item list", () => {
-    const input: number[] = [1000, 2000];
-    const actual = new List(input);
+    it("should handle two-item list", () => {
+      const actual = new List([1000, 2000]);
 
-    expect(actual.size).toBe(2);
-    expect(actual.items?.value).toBe(1000);
-    expect(actual.items?.next?.value).toBe(2000);
-    expect(actual.items?.next?.next).toBeUndefined();
+      expect(actual.size).toBe(2);
+      expect(actual.items?.value).toBe(1000);
+      expect(actual.items?.next).not.toBeUndefined();
+      expect(actual.items?.next?.value).toBe(2000);
+      expect(actual.first).toBe(1000);
+      expect(actual.last).toBe(2000);
+    });
   });
 
   describe("iterator", () => {
