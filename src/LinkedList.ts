@@ -1,44 +1,6 @@
-class Item<T> {
-  #value: T;
-  #next: Item<T> | undefined;
-  #previous: Item<T> | undefined;
+import Item from "./Item.ts";
 
-  constructor(value: T, next?: Item<T>, previous?: Item<T>) {
-    this.#value = value;
-    this.#next = next;
-    this.#previous = previous;
-  }
-
-  public get value(): T {
-    return this.#value;
-  }
-
-  public get next(): Item<T> | undefined {
-    return this.#next;
-  }
-
-  public set next(item: Item<T> | undefined) {
-    this.#next = item;
-  }
-
-  public get previous(): Item<T> | undefined {
-    return this.#previous;
-  }
-
-  public set previous(item: Item<T> | undefined) {
-    this.#previous = item;
-  }
-
-  /**
-   * cleanup
-   */
-  public cleanup() {
-    this.#next = undefined;
-    this.#previous = undefined;
-  }
-}
-
-class List<T> {
+class LinkedList<T> {
   #items: Item<T> | undefined;
   #size: number;
   #last: Item<T> | undefined;
@@ -174,7 +136,7 @@ class List<T> {
    * @param other another list
    * @returns `true` if the lists are value equal
    */
-  public equals(other: List<T>): boolean {
+  public equals(other: LinkedList<T>): boolean {
     if (this.#size !== other.#size) {
       return false;
     }
@@ -195,4 +157,4 @@ class List<T> {
   }
 }
 
-export { Item, List };
+export default LinkedList;
