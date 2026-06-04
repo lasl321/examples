@@ -130,9 +130,9 @@ class List<T> {
     }
 
     const value = previousLast.value;
+
     const newLast = previousLast.previous;
     if (newLast) {
-      previousLast.previous = undefined;
       newLast.next = undefined;
 
       this.#size = this.#size - 1;
@@ -142,6 +142,8 @@ class List<T> {
       this.#last = undefined;
       this.#items = undefined;
     }
+
+    previousLast.cleanup();
 
     return value;
   }
