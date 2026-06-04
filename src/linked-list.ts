@@ -28,6 +28,14 @@ class Item<T> {
   public set previous(item: Item<T> | undefined) {
     this.#previous = item;
   }
+
+  /**
+   * cleanup
+   */
+  public cleanup() {
+    this.#next = undefined;
+    this.#previous = undefined;
+  }
 }
 
 class List<T> {
