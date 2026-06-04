@@ -1,7 +1,7 @@
 import { it, expect, describe } from "vitest";
 import LinkedList from "../../src/LinkedList.ts";
 
-describe("linked-list", () => {
+describe("LinkedList", () => {
   describe("constructor", () => {
     it("should handle empty list", () => {
       const actual = new LinkedList([]);
